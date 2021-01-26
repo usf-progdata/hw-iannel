@@ -16,5 +16,4 @@ Hi there :wave: My name is Ian Nel and I hate R for the following reasons:
 
 R usually makes me want to do this
 
- ![](https://media2.giphy.com/media/ZbOW711ahch12Sx5kP/giphy.gif)
-
+ ![](https://media.giphy.com/media/3o6ZtiQUuXayJRwwhO/giphy.gif)
