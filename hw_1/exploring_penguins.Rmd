@@ -3,7 +3,7 @@ title: 'HW1: Exploring penguins'
 author: "Ian Nel"
 date: "1/25/2021"
 output: 
- github_document:
+ html_document:
    theme: paper
 ---
 
