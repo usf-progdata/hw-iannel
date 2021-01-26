@@ -2,9 +2,11 @@
 title: 'HW1: Exploring penguins'
 author: "Ian Nel"
 date: "1/25/2021"
-output: 
- html_document:
-   theme: paper
+output:
+  html_document:
+    df_print: paged
+    theme: cerulean
+  github_document: default
 ---
 
 ```{r setup, include=FALSE}
