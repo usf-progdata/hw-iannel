@@ -1,0 +1,23 @@
+---
+title: 'HW1: Exploring penguins'
+author: "Ian Nel"
+date: "1/25/2021"
+output:
+  html_document:
+    df_print: paged
+    theme: cerulean
+  github_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+penguins <- palmerpenguins::penguins
+summary(penguins)
+head(penguins)
+str(penguins)
+ncol(penguins)
+```
