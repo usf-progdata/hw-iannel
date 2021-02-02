@@ -7,3 +7,4 @@
 
 Hi there :wave: My name is Ian Nel 
 
+<!-- Let's be a little more positive, shall we? It's a nice way to be collegial and professional. If you aren't going to engage productively with the class, you can drop. -->
