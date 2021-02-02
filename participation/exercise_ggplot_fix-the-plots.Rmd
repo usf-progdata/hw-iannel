@@ -43,9 +43,27 @@ Fix the overlapping data points problem in the following plot using each of thes
   1. Jittering the points
 
 ```{r, fig.width = 5, fig.height = 2}
+#OG
 ggplot(mpg) +
   aes(cty, hwy) +
-  geom_point(alpha = .5, size = .5) +
+  geom_point()
+
+#1
+ggplot(mpg) +
+  aes(cty, hwy) +
+  geom_point(alpha = .3) + 
+  theme_classic()
+
+#2
+ggplot(mpg) +
+  aes(cty, hwy) +
+  geom_point(size = .5) +
+  theme_classic()
+
+#3
+ggplot(mpg) +
+  aes(cty, hwy) +
+  geom_point() +
   geom_jitter(width = 5, height = 5) +
   theme_classic()
 ```
