@@ -2,7 +2,10 @@
 title: "exercise2"
 author: "Ian Nel"
 date: "2/8/2021"
-output: html_document
+output: 
+    html_document: default
+    github_document: default 
+    theme: paper
 ---
 
 ```{r setup, include=FALSE}
