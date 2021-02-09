@@ -1,0 +1,47 @@
+---
+title: "2.9.21"
+author: "Ian Nel"
+date: "2/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading packages
+```{r}
+
+library(dplyr)
+
+```
+
+## Summarize() practice
+
+```{r}
+
+gapminder::gapminder %>% 
+  summarize(mean_pop = mean(pop),
+            mean_gdp = mean(gdpPercap) 
+  
+gapminder::gapminder %>% 
+  summarize(across(c(pop, gdpPercap), list(mn = mean, SD = sd)) #streamlined version of code above
+            
+gapminder::gapminder %>% 
+  group_by(continent) %>% 
+  summarize(across(c(pop, gdpPercap), #across() means do this thing across multiple different columns  
+                   list(mn = mean, SD = sd))
+            
+gapminder::gapminder %>% 
+  group_by(continent) %>% 
+  summarize(across(c(pop, gdpPercap), 
+                   list(mn = ~ mean(.x, na.rm = TRUE), SD = sd)) #tilda brings in whole function; .x "that column"
+```
+
+
+
+
+```{r}
+
+
+```

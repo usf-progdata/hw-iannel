@@ -1,0 +1,108 @@
+---
+title: "2.9.21"
+author: "Ian Nel"
+date: "2/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Loading packages
+```{r}
+
+library(dplyr)
+
+```
+
+# In-Class Exercise
+ Use the `psych::bfi` dataset.
+2. Compute mean scores for each of the Big Five traits for each person.
+3. Keep just Big Five scores, gender, age, and education.
+4. Summarize the mean, standard deviation, minimum, and maximum values for the Big Five scores separately by gender groups.
+5. Summarize the mean, standard deviation, minimum, and maximum values for the Big Five scores separately by educational level groups.
+
+## 2 & 3 
+```{r}
+bfi_scored <- psych::bfi %>% 
+  rowwise() %>% 
+  mutate(A_tot = mean(c_across(A1:A5), na.rm = TRUE),
+         C_tot = mean(c_across(C1:C5), na.rm = TRUE),
+         E_tot = mean(c_across(E1:E5), na.rm = TRUE),
+         N_tot = mean(c_across(N1:N5), na.rm = TRUE),
+         O_tot = mean(c_across(O1:O5), na.rm = TRUE)) %>% 
+  select(gender:O_tot)
+
+```
+
+## 4 
+Summarize the mean, standard deviation, minimum, and maximum values for the Big Five scores separately by gender groups.
+```{r}
+bfi_scored %>% 
+  group_by(gender) %>% 
+  summarize(
+    across(A_tot:O_tot, #don't need c because I'm using the ":"
+           list(mu = mean, SD = sd, minimum = min, maximum = max)
+    )
+  )
+
+```
+
+
+## 5 
+Summarize the mean, standard deviation, minimum, and maximum values for the Big Five scores separately by educational level groups
+```{r}
+bfi_scored %>% 
+  group_by(education) %>% 
+  summarize(
+    across(A_tot:O_tot, #don't need c because I'm using the ":"
+           list(mu = mean, SD = sd, minimum = min, maximum = max)
+    )
+  )
+
+```
+```{r}
+
+
+```
+
+
+## Summarize() practice
+
+```{r}
+
+gapminder::gapminder %>% 
+  summarize(mean_pop = mean(pop),
+            mean_gdp = mean(gdpPercap)) 
+  
+gapminder::gapminder %>% 
+  summarize(across(c(pop, gdpPercap), list(mn = mean, SD = sd))) #streamlined version of code above
+            
+gapminder::gapminder %>% 
+  group_by(continent) %>% 
+  summarize(across(c(pop, gdpPercap)), #across() means do this thing across multiple different columns  
+                   list(mn = mean, SD = sd))
+            
+gapminder::gapminder %>% 
+  group_by(continent) %>% 
+  summarize(across(c(pop, gdpPercap), 
+                   list(mn = ~ mean(.x, na.rm = TRUE), SD = sd)) #tilda brings in whole function; .x "that column"
+```
+
+
+
+rowwise function think of as being group_by (row ) treats each row as a separate group; use to calculate stuff on multiple items
+```{r}
+psych::bfi %>% 
+  rowwise() %>% 
+  mutate(A_tot = mean(c(A1, A2, A3, A4, A5), na.rm = TRUE),
+        (C_tot = mean(c_across(C1:C5), na.rm = TRUE)) %>% 
+  select(A_tot, C_tot)
+
+```
+
+```{r}
+
+
+```
