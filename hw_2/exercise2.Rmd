@@ -9,22 +9,59 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Exercise 2: Explore two variables with dplyr and ggplot2
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+## Loading Packages
+```{r}
+library(ggplot2)
+library(dplyr)
+library(palmerpenguins)
 ```
 
-## Including Plots
+## 2.1 
+Pick two quantitative variables to explore.
+* Make a summary table of descriptive statistics for these variables using summarize(). Include whatever staistics you feel appropriate (mean, median sd, range, etc.).
+* Make a scatterplot of these variables using ggplot().
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+### 2.1a)
+```{r}
+penguins %>% 
+  summarize(mu_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
+            sigma_flipper_length = sd(flipper_length_mm, na.rm = TRUE),
+            mu_body_mass = mean(body_mass_g, na.rm = TRUE),
+            sigma_body_mass = sd(body_mass_g, na.rm = TRUE))
+            
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### 2.1b)
+```{r}
+penguins %>% 
+  ggplot(aes(x=flipper_length_mm, y=body_mass_g)) +
+  geom_point(alpha = .4) +
+  theme_bw()
+```
+
+## 2.2
+
+Pick one categorical variable and one quantitative variable to explore.
+
+* Make a summary table giving the sample size (hint: n()) and descriptive statistics for the quantitative variable by group.
+
+* Make one or more useful plots to visualize these variables.
+
+### 2.2a)
+```{r}
+penguins %>% 
+  group_by(species) %>% 
+  summarize(mu_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            sigma_bill_length = sd(bill_length_mm, na.rm = TRUE),
+            n = n())
+
+```
+
+### 2.2b) 
+```{r}
+penguins %>%  
+  ggplot(aes(bill_length_mm, species)) +
+  ggridges::geom_density_ridges()
+```
