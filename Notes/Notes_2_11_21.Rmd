@@ -1,0 +1,113 @@
+---
+title: "2_11_21_Notes"
+author: "Ian Nel"
+date: "2/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+library(gapminder)
+
+```
+
+
+## ggplot
+```{r}
+penguins %>%  
+  mutate(Sex = recode(sex, 
+                        female = "Female", 
+                        male = "Male")) %>% 
+  ggplot() +
+  aes(x = species, y = flipper_length_mm,
+      color = Sex) +
+  geom_jitter(height = 0, width = .2) + 
+  xlab("Species") +
+  scale_y_continuous("Flipper Length (mm)") +
+  scale_color_brewer(palette = "Accent") +
+  theme_classic()
+  
+
+
+```
+x-lab vs. scale_x_discrete 
+x_lab - just change the title 
+labs - does the same thing as x_lab 
+scale functions - general utility knife for doing all sorts of things; other formatting 
+
+brewer is good for people with color deficiencies
+
+aes - mapping
+geom - shape
+scale - controlling appearance
+
+## BFI rescoring
+
+```{r}
+# scales - A C E N O 
+# 5 each 
+
+bfi_scored <- #make new data frame with my scored scores 
+  psych::bfi %>% 
+  rowwise() %>% 
+  mutat() #compute mean score for each row
+
+```
+
+#Dplyr review
+https://talks.andrewheiss.com/2020-gpl/01_welcome-tidyverse/04_transform-data.html
+
+%in% Test each row against all values in set instead of testing each 
+relationalfunctions = element-wise comparison (each element against one other elemtn in comparison vector)
+* compares input vector to test values 
+```=``` assignment; ```==``` equal to 
+```" "``` character values (e.g., "Canada" vs. Canada)
+"," & "&" do the same thing "|" = or 
+! excludes 
+```{r}
+gapminder %>% 
+  mutate(pop_mil = round(pop / 1000000)) #rounds to nearest whole number (in millions)
+
+
+```
+
+ifelse(Test, value if true, value if false)
+* Test = logical test 
+* value_if_true = what happens if it's true 
+* value_if_false = what happens if it's false 
+```{r}
+mutate(gapminder, 
+       after_1960 = ifelse(year > 1960))
+
+```
+
+## summarize
+```{r}
+gapminder %>% 
+  summarize(mean_life = mean(lifeExp)) #name of column, computed as mean of lifeExp
+
+gapminder %>% 
+  filter(continent == "Africa", year == 2007) %>% #only africa in year 2007
+  summarize(n_countries = n_distinct(country),
+            med_le = median(lifeExp))
+
+```
+
+
+```{r}
+
+
+```
+
+
+```{r}
+
+```
+
+
