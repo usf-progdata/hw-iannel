@@ -1,0 +1,79 @@
+---
+title: "exercise2"
+author: "Ian Nel"
+date: "2/8/2021"
+output: 
+  html_document: 
+    keep_md: true 
+    theme: paper
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exercise 2: Explore two variables with dplyr and ggplot2
+
+## Loading Packages
+```{r}
+library(ggplot2)
+library(dplyr)
+library(palmerpenguins)
+```
+
+## 2.1 
+Pick two quantitative variables to explore.
+* Make a summary table of descriptive statistics for these variables using summarize(). Include whatever staistics you feel appropriate (mean, median sd, range, etc.).
+* Make a scatterplot of these variables using ggplot().
+
+### 2.1a)
+```{r}
+penguins %>% 
+  summarize(mu_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
+            sigma_flipper_length = sd(flipper_length_mm, na.rm = TRUE),
+            mu_body_mass = mean(body_mass_g, na.rm = TRUE),
+            sigma_body_mass = sd(body_mass_g, na.rm = TRUE))
+            
+```
+
+### 2.1b)
+```{r}
+penguins %>% 
+  ggplot(aes(x=flipper_length_mm, y=body_mass_g)) +
+  geom_point(alpha = .4) +
+  theme_bw()
+```
+
+## 2.2
+
+Pick one categorical variable and one quantitative variable to explore.
+
+* Make a summary table giving the sample size (hint: n()) and descriptive statistics for the quantitative variable by group.
+
+* Make one or more useful plots to visualize these variables.
+
+### 2.2a)
+```{r}
+penguins %>% 
+  group_by(species) %>% 
+  summarize(mu_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            sigma_bill_length = sd(bill_length_mm, na.rm = TRUE),
+            n = n())
+
+```
+
+### 2.2b) 
+```{r}
+penguins %>%  
+  ggplot(aes(bill_length_mm, species)) +
+  ggridges::geom_density_ridges()
+```
+
+
+#Bonus Exercise: Recycling (Optional)
+Evaluate this code and describe the result. The goal was to get the data for Rwanda and Afghanistan. Does this work? Why or why not? If not, what is the correct way to do this?
+```{r}
+filter(gapminder::gapminder, country == c("Rwanda", "Afghanistan"))
+
+```
+It does not completely work. This code only returns the data for every *other* year per country. For example, it provides Afghanistan's data for 1957, but not for the years before (1952) or after (1962). R is comparing values equal to one country then the other, thereby "flip flopping" between the two. The correct way to do it is using the relational function ```%in%```
