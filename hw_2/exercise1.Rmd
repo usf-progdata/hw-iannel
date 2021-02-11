@@ -3,8 +3,8 @@ title: "hw_2"
 author: "Ian Nel"
 date: "2/8/2021"
 output: 
-    html_document: default
-    github_document: default 
+  html_document: 
+    keep_md: true 
     theme: paper
 ---
 
@@ -39,7 +39,7 @@ Use the pipe operator %>% to select “country” and “gdpPercap” from your 
 ```{r}
 gapminder %>% 
   filter(year > 1969 & year < 1980 & country %in% c("Afghanistan", "Albania", "Algeria")) %>% 
-  select(c(country, gdpPercap))
+  select(country, gdpPercap) #the c() is superfluous 
   
 ```
 
@@ -74,6 +74,7 @@ gapminder %>%
   ggplot(aes(x = gdpPercap, y = lifeExp)) +
   geom_point(alpha = 0.5) +
   scale_x_log10() +
+  ggtitle("Canada’s life expectancy vs. GDP per capita") +
   theme_bw()
   
 ```
