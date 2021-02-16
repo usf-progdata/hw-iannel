@@ -185,12 +185,21 @@ psychTools::bfi %>%
   select(education, hs_grad)
 
 ## 5. Reverse code the -1 items, as indicated in psychTools::bfi.dictionary or psych::bfi.key
+dictionary <- psychTools::bfi.dictionary %>% #move rownames to a columns
+  as_tibble(rownames = "item_label") 
 
+reversed <- dictionary %>% 
+  filter(Keying == -1) %>% 
+  pull(item_label) #select keeps it in a column; pull pulls it out of the dataframe #vectors can be freefloating (all columns are vectors, not all vectors are columns)
+
+###now I want a dataframe w/ reverse-coded items
+bfi_dat <- psychTools::bfi %>% 
+  mutate(A1 )
 
 #Ignore the code below- it doesn't work 
 psychTools::bfi.dictionary %>% 
   filter(Keying == -1) %>% 
-  reversed <- pull(Item) 
+  pull(Item) 
 
 psychTools::bfi.dictionary %>%
   mutate(
