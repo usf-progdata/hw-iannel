@@ -194,7 +194,7 @@ reversed <- dictionary %>%
 
 ###now I want a dataframe w/ reverse-coded items
 bfi_dat <- psychTools::bfi %>% 
-  mutate(A1 )
+  mutate(A1 ) #pause here
 
 #Ignore the code below- it doesn't work 
 psychTools::bfi.dictionary %>% 
