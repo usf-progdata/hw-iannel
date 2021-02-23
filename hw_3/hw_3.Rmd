@@ -1,11 +1,28 @@
+---
+title: "hw3"
+author: "Ian Nel"
+date: "2/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(reshape2)
+library(kableExtra)
+```
+
 # Homework 03
 
 You will analyze data looking at the relationship between **green reputation** and three personality traits--**compassion**, **intellectual curiosity**, and **openness to experiences**.
 The dataset includes data from **students** and **non-students**.
 
-```{r}
+
+```{r data}
 dictionary <- readr::read_csv(here::here("hw03", "green_dictionary.csv"))
 green_data <- readr::read_csv(here::here("hw03", "green_data.csv"))
+
+print(dictionary, n = 36)
 ```
 
 For your assignment, do the following.
