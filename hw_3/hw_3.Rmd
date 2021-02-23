@@ -49,13 +49,38 @@ summary(green_data) #some values are coded as -99, so I'm going to code them as
 dat <- green_data %>% 
       na_if("-99")
 
-summary(dat)
+summary(dat) #now minimum values are 1 (not -99)
 ```
 
 ## 2) Compute total scores for the four scales. Recode variables as needed.
 ```{r}
+#see which variables need to be recoded
+view(dictionary) 
 
+#Reverse code items
+reversed <- dictionary %>% 
+  filter(Keying == -1) %>% 
+  pull(Item)
 
+datr <- dat %>% 
+  mutate(
+    across(all_of(reversed),
+           ~ 6 - .x,
+           .names = "{.col}r")
+  )
+
+#Using rowwise function to create total scores for each person 
+
+datr %>% 
+  rowwise() %>% 
+  mutate(
+   green_tot = sum(c(green1,green2r,green3,green4,green5), na.rm = TRUE),
+         comp_tot = sum(c(comp1,comp2,comp3,comp4,comp5,comp6r,comp7r,comp8r,comp9r,comp10r), na.rm = TRUE),
+         intel_tot = sum(c(intel1,intel2,intel3,intel4,intel5,intel6,intel7r,intel8r,intel9r,intel10r), na.rm =TRUE),
+         open_tot = sum(c(open1,open2,open3,open4,open5,open6,open7r,open8r,open9r,open10r), na.rm = TRUE)
+   )
+
+summary(datr)
 ```
 
 ```{r}
