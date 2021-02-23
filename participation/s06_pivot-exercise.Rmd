@@ -1,0 +1,49 @@
+---
+title: "Exercises: Univariate pivoting"
+output: 
+  html_document:
+    theme: paper
+---
+
+```{r}
+library(tidyverse)
+lotr  <- read_csv("https://raw.githubusercontent.com/jennybc/lotr-tidy/master/data/lotr_tidy.csv") %>% 
+  rename(Species = Race)
+```
+
+<!---The following chunk allows errors when knitting--->
+
+```{r allow errors, echo = FALSE}
+knitr::opts_chunk$set(error = TRUE, warning = FALSE)
+```
+
+
+## Exercise 1: Univariate Pivoting
+
+Consider the Lord of the Rings data:
+
+```{r}
+lotr
+```
+
+1. Would you say this data is in tidy format?
+
+   <!-- It depends upon how you define your “observation” and “variables” for the current analysis. This dataset may be considered tidy, because each row is an observation; each column is a variable; each cell is a value.   -->
+
+2. Widen the data so that we see the words spoken by each species, by putting each species as its own column.
+
+```{r}
+(lotr_wide <- lotr %>% 
+  pivot_wider(id_cols = c(-Species, -Words), #columns we want to keep
+              names_from = Species, #new column *names* are coming from each unique entry from old "species" column
+              values_from = Words)) #new column *values* are coming from old column "words"
+```
+
+3. Re-lengthen the wide LOTR data from Question 2 above.
+
+```{r}
+lotr_wide %>% 
+  pivot_longer(cols = c(Elf:Man), #columns we want to pivot into a single column
+               names_to  = "Species", #old column names are going to be stored in the new column "Species"
+               values_to = "Words") #the values from old columns are going to be stored in new column "words" 
+```
