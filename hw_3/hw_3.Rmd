@@ -86,7 +86,7 @@ summary(datr2)
 
 ##  3) Rescale the variables so that they go from 0-100 instead of the original range. Name the recaled variables `*_pomp`.
 ```{r}
-#Using rowwise function to rescale scores for each person from a 1-5 to a 1-100 scale. 
+#Using rowwise function to rescale scores for each person from a 1-5 to a 0-100 scale. 
 datr3 <- datr2 %>% 
   rowwise() %>% 
   mutate(green_pomp = rescale(green_tot, to = c(0, 100), from = c(1,5)),
@@ -99,9 +99,30 @@ datr3 <- datr2 %>%
 
 ## 4) Make plots that illustrate the distributions of the 4 POMP-scored variables.
 ```{r}
+green_hist <- ggplot(datr3) +
+  aes(x = green_pomp, y = ..density..) +
+  geom_histogram(color="springgreen",fill="dark green", binwidth = 5)+
+  geom_density(alpha = .1, fill = "black")
 
+comp_hist <- ggplot(datr3) +
+  aes(x = comp_pomp, y = ..density..) +
+  geom_histogram(color = "midnightblue", fill="pink", binwidth = 5)+
+  geom_density(alpha = .1, fill = "black")
 
+intel_hist <- ggplot(datr3) +
+  aes(x = intel_pomp, y = ..density..) +
+  geom_histogram(color = "darkorchid2", fill="gold", binwidth = 5) +
+  geom_density(alpha = .1, fill = "black")
+
+open_hist <- ggplot(datr3) +
+  aes(x = open_pomp, y = ..density..) +
+  geom_histogram(color="black", fill="turquoise2", binwidth = 5) +
+  geom_density(alpha = .1, fill = "black")
+
+gridExtra::grid.arrange(green_hist,comp_hist,intel_hist,open_hist)
 ```
+### Narrative Description 
+These histograms demonstrate that these variables have a relatively normal distribution, except for "comp_pomp" which is skewed to the left. "Intel_pomp" also appears to be somewhat bimodal. 
 
 ## 5) Make scatterplots showing the relationships between **green reputation** and each personality trait. Include trend lines for **students** and **non-students**. What do these plots show?
 ```{r}
