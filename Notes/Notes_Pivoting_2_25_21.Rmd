@@ -1,0 +1,18 @@
+---
+title: "Notes_Pivoting_2/25/21"
+author: "Ian Nel"
+date: "2/25/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Pivoting
+## Pivot_longer
+```names_to``` - names of columns we want to make (how many variables we are going to make)
+* ```.value``` means "make that the name of the column" 
+splitting apart columns using ```names_sep``` argument; how to break up column names being pivoted 
+
+## Pivot_wider
