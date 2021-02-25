@@ -81,8 +81,7 @@ family %>%
                values_to = "score") %>% 
   filter(is.na(w2)) %>%  #is.na checks if missing 
   select(family_id) %>% 
-  unique() %>% 
-  
+  unique() 
   
 ```
 
