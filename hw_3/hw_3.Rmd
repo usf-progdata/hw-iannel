@@ -3,8 +3,8 @@ title: "hw3"
 author: "Ian Nel"
 date: "2/22/2021"
 output: 
-    github_document: default 
     html_document: default 
+    github_document: default 
     keep_md: TRUE
 ---
 
