@@ -1,0 +1,28 @@
+---
+title: "Notes_3/2/21_File_Input/Output"
+author: "Ian Nel"
+date: "3/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+csv = comma separated values; great format for exchanging data
+Save excel files as csv before further processing because it's simpler
+
+install.packages("here")
+here package best way to refer to files - provides sequence of folders to follow; sned them entire R projects
+here::here()
+
+```{r}
+here::here("data", "") #first argument is where is the path/file\
+
+```
+
+copy and paste column specifications from ```read_csv``` to col_types; read_csv guesses and does a pretty good job; saves time so you don't have to manually type column specifications
+
+na = c("", "NA") defaults to 2 different things; NA = blank; NA = "NA"; can add more NA specifications (e.g., c("","NA",-999))
+
+recursive = make all of the necessary folders along the way 
