@@ -16,13 +16,29 @@ install.packages("here")
 here package best way to refer to files - provides sequence of folders to follow; sned them entire R projects
 here::here()
 
+## loading packages
 ```{r}
-here::here("data", "") #first argument is where is the path/file\
+library(tidyverse)
 
 ```
 
+## Here:here example - finding README.md in hw1 file
+```{r}
+here::here("participation","README.md") #first argument is where is the path/file starts, 
+
+```
+## herehere - reading in green data file in h3 folder, then extracting column specifications
+```{r}
+read_csv(
+  here::here("hw_3","green_data.csv")) %>% 
+  spec()
+
+```
 copy and paste column specifications from ```read_csv``` to col_types; read_csv guesses and does a pretty good job; saves time so you don't have to manually type column specifications
 
 na = c("", "NA") defaults to 2 different things; NA = blank; NA = "NA"; can add more NA specifications (e.g., c("","NA",-999))
 
 recursive = make all of the necessary folders along the way 
+
+## Here here function 
+```here::here``` list out sequence of folders (in quotations) you want to jump into, separated by commas

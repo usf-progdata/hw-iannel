@@ -8,13 +8,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Loading Packages 
+```{r}
+library(tidyverse)
+library(readr)
+```
+
 For this activity, download the data file at this location to the `data` subfolder in your `participation` folder. 
 This dataset contains information about different catagories of beer as rated on <beeradvocate.com>.
 The data are originally from [here](http://scottjanish.com/relationship-of-abv-to-beer-scores/).
 
-```{r}
-url <- "https://raw.githubusercontent.com/USF-Psych-DataSci/Classroom/master/data/beer-advocate.csv"
-```
 
 The dataset contains 3 variables:
 
@@ -30,3 +33,57 @@ You should write a script to do the following:
   3. Make a figure illustrating the relationship between ABV and beer quality.
   4. Compute a summary table with the mean and SD of each variable, along with their correlation.
   5. Describe the results.
+
+## 1 Download with filename
+```{r}
+if ( !dir.exists( here::here("participation", "data") ) ) {
+  dir.create( here::here("participation", "data"), recursive = TRUE )
+} #if this doesn't exist, then create this "data" directory/folder
+
+url <- "https://raw.githubusercontent.com/USF-Psych-DataSci/Classroom/master/data/beer-advocate.csv"
+download.file(
+  url, 
+  here::here("participation", "data", "beerdata.csv"), 
+  mode = "wb"
+)
+```
+
+##2 Import to R
+```{r}
+beerdata <- read_csv(
+  here::here("participation", "data", "beerdata.csv"),
+  col_types = cols(
+    `Beer Category` = col_character(),
+    `Average ABV` = col_double(),
+    rAVG = col_double()
+  ),
+  na = c("", "NA", "Non-alcoholic")
+)
+#always use read_csv not read.csv; read_csv won't rename your columns & checks type of variable in each column
+#ctrl-i re-indents the lines; check out code tab
+#If i want to tell what to treat things as missing, use ```na``` argument to specify
+```
+
+## 3 Make a figure
+```{r}
+beerdata %>% 
+  ggplot() +
+  aes(`Average ABV`, rAVG) +
+  geom_point(alpha = .6) +
+  stat_smooth(method=lm) +
+  theme_classic()
+```
+
+## 4 Compute a summary table with the mean and SD of each variable, along with their correlation.
+```{r}
+beerdata %>% 
+  summarise(across(c(`Average ABV`, rAVG),
+            list(
+              mean = ~mean(.x, na.rm= TRUE),
+              SD = ~sd(.x, na.rm = TRUE),
+              r = cor.test(`Average ABV`, rAVG) # this is wrong
+            )))
+
+```
+
+## 5 describe results 
