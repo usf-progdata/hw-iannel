@@ -1,0 +1,29 @@
+---
+title: "hw04.Rmd"
+author: "Ian Nel"
+date: "3/8/2021"
+output: 
+  html_document:
+    theme: paper
+  github_document: default 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#include libraries here
+```
+
+## Step 3: Practice input, process, output 
+
+In your .Rmd file for this homework assignment (call it hw04.Rmd), practice reading your data file into R, processing the imported data, and outputting files. Import your file using R functions (not the buttons in RStudio).
+
+You will want to output two things:
+
+1. A data file, such as cleaned dataset and/or a summarized dataset/table
+2. A plot, in several formats, including (1) a bitmap format, (2) a vector format, and (3) PDF
+
+The point of this exercise is to practice reading your files into R, working with them, and then saving your outputs to disk (other than/in addition to the files that are output when you knit a .Rmd file).
+
+Save your data file and plots to your output folder (or other more specific folders if that is your structure). Be sure to use descriptive file names and document what these files are with a .md file.
+
+Save your data file using write_csv() or a similar function. Save your images using ggsave(). Do not use the buttons in RStudio.
