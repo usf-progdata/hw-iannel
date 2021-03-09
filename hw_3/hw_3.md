@@ -3,6 +3,11 @@ hw3
 Ian Nel
 2/22/2021
 
+<!-- BMW: In your YAML header, indent subsections by 2 spaces, not 4.
+          Sub-options, like the theme for html_document, need to be indented under the parent option. When you have a sub-option like theme, don't include "default" for the parent option. 
+          See what I edited above.
+-->
+
 # Homework 03
 
 You will analyze data looking at the relationship between **green
@@ -56,10 +61,10 @@ For your assignment, do the following.
 In your assignment, prepare an RMarkdown file that includes both the
 coding and (for 4-7) narrative descriptions of your results.
 
-## 1\) Inspect the item responses (e.g., with graphs or by summarizing distinct values). Is anything unusual?
+## 1) Inspect the item responses (e.g., with graphs or by summarizing distinct values). Is anything unusual?
 
 ``` r
-print(green_data)
+print(green_data) # BMW: Dont' print whole datasets in your final report
 ```
 
     ## # A tibble: 373 x 37
@@ -169,8 +174,7 @@ summary(green_data) #some values are coded as -99, so I'm going to code them as
 
 ``` r
 dat <- green_data %>%
-  mutate(student = factor(student, levels = c(1, 2))) %>% 
-  mutate(student = recode(student, "1" = "Non-student", "2" = "Student")) %>% 
+  mutate(student = factor(student, levels = c(1, 2), labels = c("Non-student", "Student"))) %>% # BMW: You can conversion to factor and setting labels in one line like this
   na_if("-99")
 
 summary(dat) #now minimum values are 1 (not -99)
@@ -249,11 +253,11 @@ summary(dat) #now minimum values are 1 (not -99)
     ##  Max.   :5.000   Max.   :5.000   Max.   :5.00                    
     ##  NA's   :84      NA's   :77      NA's   :91
 
-## 2\) Compute total scores for the four scales. Recode variables as needed.
+## 2) Compute total scores for the four scales. Recode variables as needed.
 
 ``` r
 #see which variables need to be recoded
-view(dictionary) 
+view(dictionary) # BMW: Don't leave `View()` calls in your final document. 
 
 #Reverse code items
 reversed <- dictionary %>% 
@@ -265,7 +269,7 @@ datr <- dat %>%
     across(all_of(reversed),
            ~ 6 - .x,
            .names = "{.col}r")
-  )
+  ) # BMW: Nicely done.
 
 #Using rowwise function to create total scores for each person 
 
@@ -276,7 +280,8 @@ datr2 <- datr %>%
          comp_tot = mean(c(comp1,comp2,comp3,comp4,comp5,comp6r,comp7r,comp8r,comp9r,comp10r), na.rm = FALSE),
          intel_tot = mean(c(intel1,intel2,intel3,intel4,intel5,intel6,intel7r,intel8r,intel9r,intel10r), na.rm =FALSE),
          open_tot = mean(c(open1,open2,open3,open4,open5,open6,open7r,open8r,open9r,open10r), na.rm = FALSE)
-   )
+   ) %>% 
+  ungroup() # BMW: Always ungroup() after you use rowwise() or group_by()
 
 summary(datr2)
 ```
@@ -386,7 +391,7 @@ summary(datr2)
     ##  Max.   :5.000   Max.   :5.000   Max.   :4.900   Max.   :4.800  
     ##  NA's   :58      NA's   :94      NA's   :97      NA's   :96
 
-## 3\) Rescale the variables so that they go from 0-100 instead of the original range. Name the recaled variables `*_pomp`.
+## 3) Rescale the variables so that they go from 0-100 instead of the original range. Name the recaled variables `*_pomp`.
 
 ``` r
 #Using rowwise function to rescale scores for each person from a 1-5 to a 0-100 scale. 
@@ -396,10 +401,13 @@ datr3 <- datr2 %>%
          comp_pomp = rescale(comp_tot, to = c(0, 100), from = c(1,5)),
          intel_pomp = rescale(intel_tot, to = c(0, 100), from = c(1,5)),
          open_pomp = rescale(open_tot, to = c(0, 100), from = c(1,5))
-  )
+  ) %>% 
+  ungroup()
+
+# BMW: In general, use more descriptive object names. eg, dat_cleaned or dat_analysis instead of datr3
 ```
 
-## 4\) Make plots that illustrate the distributions of the 4 POMP-scored variables.
+## 4) Make plots that illustrate the distributions of the 4 POMP-scored variables.
 
 ``` r
 green_hist <- ggplot(datr3) +
@@ -446,7 +454,7 @@ Narrative Description These histograms demonstrate that these variables
 have a relatively normal distribution, except for “comp\_pomp” which is
 skewed to the left. “Intel\_pomp” also appears to be somewhat bimodal.
 
-## 5\) Make scatterplots showing the relationships between **green reputation** and each personality trait. Include trend lines for **students** and **non-students**. What do these plots show?
+## 5) Make scatterplots showing the relationships between **green reputation** and each personality trait. Include trend lines for **students** and **non-students**. What do these plots show?
 
 ``` r
 datr3 %>% 
@@ -516,7 +524,7 @@ of these correlations are similar for both students and nonstudents, but
 the relationship between green\_pomp and comp\_pop is slightly greater
 for students than non-students.
 
-## 6\) Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
+## 6) Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
 
 ``` r
 datr3 %>% 
@@ -544,7 +552,7 @@ for students. The green\_pomp distribution for non-students appears to
 be more bimodal, whereas the distribution for students appears to be
 normal.
 
-## 7\) Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
+## 7) Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
 
 ``` r
 sumtable <- datr3 %>% 
@@ -561,405 +569,205 @@ kable(sumtable)
 ```
 
 <table>
-
 <thead>
-
 <tr>
-
 <th style="text-align:left;">
-
 student
-
 </th>
-
 <th style="text-align:right;">
-
 green\_pomp\_Mean
-
 </th>
-
 <th style="text-align:right;">
-
 green\_pomp\_SD
-
 </th>
-
 <th style="text-align:right;">
-
 green\_pomp\_Median
-
 </th>
-
 <th style="text-align:right;">
-
 green\_pomp\_Min
-
 </th>
-
 <th style="text-align:right;">
-
 green\_pomp\_Max
-
 </th>
-
 <th style="text-align:right;">
-
 open\_pomp\_Mean
-
 </th>
-
 <th style="text-align:right;">
-
 open\_pomp\_SD
-
 </th>
-
 <th style="text-align:right;">
-
 open\_pomp\_Median
-
 </th>
-
 <th style="text-align:right;">
-
 open\_pomp\_Min
-
 </th>
-
 <th style="text-align:right;">
-
 open\_pomp\_Max
-
 </th>
-
 <th style="text-align:right;">
-
 intel\_pomp\_Mean
-
 </th>
-
 <th style="text-align:right;">
-
 intel\_pomp\_SD
-
 </th>
-
 <th style="text-align:right;">
-
 intel\_pomp\_Median
-
 </th>
-
 <th style="text-align:right;">
-
 intel\_pomp\_Min
-
 </th>
-
 <th style="text-align:right;">
-
 intel\_pomp\_Max
-
 </th>
-
 <th style="text-align:right;">
-
 comp\_pomp\_Mean
-
 </th>
-
 <th style="text-align:right;">
-
 comp\_pomp\_SD
-
 </th>
-
 <th style="text-align:right;">
-
 comp\_pomp\_Median
-
 </th>
-
 <th style="text-align:right;">
-
 comp\_pomp\_Min
-
 </th>
-
 <th style="text-align:right;">
-
 comp\_pomp\_Max
-
 </th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <tr>
-
 <td style="text-align:left;">
-
 Non-student
-
 </td>
-
 <td style="text-align:right;">
-
 58.35294
-
 </td>
-
 <td style="text-align:right;">
-
 16.73299
-
 </td>
-
 <td style="text-align:right;">
-
 60
-
 </td>
-
 <td style="text-align:right;">
-
 10
-
 </td>
-
 <td style="text-align:right;">
-
 100
-
 </td>
-
 <td style="text-align:right;">
-
 64.05882
-
 </td>
-
 <td style="text-align:right;">
-
 12.64191
-
 </td>
-
 <td style="text-align:right;">
-
 62.5
-
 </td>
-
 <td style="text-align:right;">
-
 37.5
-
 </td>
-
 <td style="text-align:right;">
-
 95
-
 </td>
-
 <td style="text-align:right;">
-
 65.00000
-
 </td>
-
 <td style="text-align:right;">
-
 13.97276
-
 </td>
-
 <td style="text-align:right;">
-
 67.5
-
 </td>
-
 <td style="text-align:right;">
-
 37.5
-
 </td>
-
 <td style="text-align:right;">
-
 95.0
-
 </td>
-
 <td style="text-align:right;">
-
 70.91176
-
 </td>
-
 <td style="text-align:right;">
-
 13.33992
-
 </td>
-
 <td style="text-align:right;">
-
 75.0
-
 </td>
-
 <td style="text-align:right;">
-
 40.0
-
 </td>
-
 <td style="text-align:right;">
-
 100
-
 </td>
-
 </tr>
-
 <tr>
-
 <td style="text-align:left;">
-
 Student
-
 </td>
-
 <td style="text-align:right;">
-
 56.62921
-
 </td>
-
 <td style="text-align:right;">
-
 17.14470
-
 </td>
-
 <td style="text-align:right;">
-
 55
-
 </td>
-
 <td style="text-align:right;">
-
 15
-
 </td>
-
 <td style="text-align:right;">
-
 95
-
 </td>
-
 <td style="text-align:right;">
-
 66.74157
-
 </td>
-
 <td style="text-align:right;">
-
 14.93349
-
 </td>
-
 <td style="text-align:right;">
-
 67.5
-
 </td>
-
 <td style="text-align:right;">
-
 20.0
-
 </td>
-
 <td style="text-align:right;">
-
 95
-
 </td>
-
 <td style="text-align:right;">
-
 63.03371
-
 </td>
-
 <td style="text-align:right;">
-
 14.41648
-
 </td>
-
 <td style="text-align:right;">
-
 65.0
-
 </td>
-
 <td style="text-align:right;">
-
 25.0
-
 </td>
-
 <td style="text-align:right;">
-
 97.5
-
 </td>
-
 <td style="text-align:right;">
-
 77.80899
-
 </td>
-
 <td style="text-align:right;">
-
 14.22588
-
 </td>
-
 <td style="text-align:right;">
-
 77.5
-
 </td>
-
 <td style="text-align:right;">
-
 22.5
-
 </td>
-
 <td style="text-align:right;">
-
 100
-
 </td>
-
 </tr>
-
 </tbody>
-
 </table>
 
 Non-students had a greater mean and median green reputation and

@@ -3,15 +3,20 @@ title: "hw3"
 author: "Ian Nel"
 date: "2/22/2021"
 output: 
-    github_document: default 
-    html_document: default 
-    keep_md: TRUE
+  github_document: default 
+  html_document:
+    theme: cerulean
 ---
+
+<!-- BMW: In your YAML header, indent subsections by 2 spaces, not 4.
+          Sub-options, like the theme for html_document, need to be indented under the parent option. When you have a sub-option like theme, don't include "default" for the parent option. 
+          See what I edited above.
+-->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-library(reshape2)
+library(reshape2) # BMW: Don't use reshape2 and tidyverse packages (eg, dplyr or tidyr) together in the same script. reshape2 isn't supported anymore, and I suggest moving to using tidyr::pivot_longer() and tidyr::pivot_wider() like we practiced in class instead.
 library(kableExtra)
 library(scales)
 library(ggplot2)
@@ -48,12 +53,11 @@ In your assignment, prepare an RMarkdown file that includes both the coding and 
 ## 1) Inspect the item responses (e.g., with graphs or by summarizing distinct values). Is anything unusual?
 
 ```{r item inspection}
-print(green_data)
+print(green_data) # BMW: Dont' print whole datasets in your final report
 summary(green_data) #some values are coded as -99, so I'm going to code them as
 
 dat <- green_data %>%
-  mutate(student = factor(student, levels = c(1, 2))) %>% 
-  mutate(student = recode(student, "1" = "Non-student", "2" = "Student")) %>% 
+  mutate(student = factor(student, levels = c(1, 2), labels = c("Non-student", "Student"))) %>% # BMW: You can conversion to factor and setting labels in one line like this
   na_if("-99")
 
 summary(dat) #now minimum values are 1 (not -99)
@@ -62,7 +66,7 @@ summary(dat) #now minimum values are 1 (not -99)
 ## 2) Compute total scores for the four scales. Recode variables as needed.
 ```{r}
 #see which variables need to be recoded
-view(dictionary) 
+view(dictionary) # BMW: Don't leave `View()` calls in your final document. 
 
 #Reverse code items
 reversed <- dictionary %>% 
@@ -74,7 +78,7 @@ datr <- dat %>%
     across(all_of(reversed),
            ~ 6 - .x,
            .names = "{.col}r")
-  )
+  ) # BMW: Nicely done.
 
 #Using rowwise function to create total scores for each person 
 
@@ -85,12 +89,16 @@ datr2 <- datr %>%
          comp_tot = mean(c(comp1,comp2,comp3,comp4,comp5,comp6r,comp7r,comp8r,comp9r,comp10r), na.rm = FALSE),
          intel_tot = mean(c(intel1,intel2,intel3,intel4,intel5,intel6,intel7r,intel8r,intel9r,intel10r), na.rm =FALSE),
          open_tot = mean(c(open1,open2,open3,open4,open5,open6,open7r,open8r,open9r,open10r), na.rm = FALSE)
-   )
+   ) %>% 
+  ungroup() # BMW: Always ungroup() after you use rowwise() or group_by()
 
 summary(datr2)
 ```
 
 ##  3) Rescale the variables so that they go from 0-100 instead of the original range. Name the recaled variables `*_pomp`.
+
+<!-- BMW: You need a blank line between text and code chunks to ensure correct printing when knit. -->
+
 ```{r}
 #Using rowwise function to rescale scores for each person from a 1-5 to a 0-100 scale. 
 datr3 <- datr2 %>% 
@@ -99,11 +107,15 @@ datr3 <- datr2 %>%
          comp_pomp = rescale(comp_tot, to = c(0, 100), from = c(1,5)),
          intel_pomp = rescale(intel_tot, to = c(0, 100), from = c(1,5)),
          open_pomp = rescale(open_tot, to = c(0, 100), from = c(1,5))
-  )
+  ) %>% 
+  ungroup()
+
+# BMW: In general, use more descriptive object names. eg, dat_cleaned or dat_analysis instead of datr3
 
 ```
 
 ## 4) Make plots that illustrate the distributions of the 4 POMP-scored variables.
+
 ```{r}
 green_hist <- ggplot(datr3) +
   aes(x = green_pomp, y = ..density..) +
@@ -126,11 +138,15 @@ open_hist <- ggplot(datr3) +
   geom_density(alpha = .1, fill = "black")
 
 gridExtra::grid.arrange(green_hist,comp_hist,intel_hist,open_hist)
+
+# BMW: Nicely done. 
 ```
 ### Narrative Description 
+
 These histograms demonstrate that these variables have a relatively normal distribution, except for "comp_pomp" which is skewed to the left. "Intel_pomp" also appears to be somewhat bimodal. 
 
 ## 5) Make scatterplots showing the relationships between **green reputation** and each personality trait. Include trend lines for **students** and **non-students**. What do these plots show?
+
 ```{r}
 datr3 %>% 
   filter(!is.na(student)) %>% 
@@ -167,32 +183,43 @@ datr3 %>%
 
 ```
 ### Narrative Description
+
+<!-- BMW: You need a blank line between paragraphs. -->
+
 There is a small positive correlation between green_pomp and all three personality traits. The strength and magnitude of these correlations are similar for both students and nonstudents, but the relationship between green_pomp and comp_pop is slightly greater for students than non-students.
 
 ## 6) Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
+
 ```{r}
-datr3 %>% 
-  filter(!is.na(student)) %>% 
-ggplot() +
+datr3 %>%
+  filter(!is.na(student)) %>%
+  ggplot() +
   aes(y = student,
       x = green_pomp,
       fill = student,
-      color = student) +
-  geom_boxplot(color = "black",
-               alpha = .5,
-               width = .5,
-               size = .5) +
-  ggdist::stat_slab(height = .5,
-                    color = "black",
-                    size = .5,
-                    alpha = .5,
-                    position = position_nudge(y = .1))
-
+      color = student) + 
+  geom_jitter(width = 0, height = .1) + # BMW: Rainfall plots include the raw data points too
+  geom_boxplot(
+    color = "black",
+    alpha = .5,
+    width = .5,
+    size = .5
+  ) +
+  ggdist::stat_slab(
+    height = .5,
+    color = "black",
+    size = .5,
+    alpha = .5,
+    position = position_nudge(y = .1)
+  )
 ```
+
 ### Narrative Description 
+
 This rainfall plot shows that the median green_pomp for non-students is slightly larger for non-students than for students. The green_pomp distribution for non-students appears to be more bimodal, whereas the distribution for students appears to be normal.
 
 ## 7) Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
+
 ```{r}
 sumtable <- datr3 %>% 
   na.omit() %>% 
@@ -207,4 +234,5 @@ sumtable <- datr3 %>%
 kable(sumtable)
 
 ```
+
 Non-students had a greater mean and median green reputation and intellectual curiosity compared with students, whereas students had a higher mean and median openness to experience and compassion. 
