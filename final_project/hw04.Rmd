@@ -10,7 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#include libraries here
+library(tidyverse) 
 ```
 
 ## Step 3: Practice input, process, output 
@@ -27,3 +27,18 @@ The point of this exercise is to practice reading your files into R, working wit
 Save your data file and plots to your output folder (or other more specific folders if that is your structure). Be sure to use descriptive file names and document what these files are with a .md file.
 
 Save your data file using write_csv() or a similar function. Save your images using ggsave(). Do not use the buttons in RStudio.
+
+```{r data input}
+#read file
+data_raw <- haven::read_spss(
+  here::here("data", "data_raw", "Synthetic-Combined-Clinical-Community-Samples_2020-03-08.sav")
+)
+
+#filter file
+
+#write to a csv 
+data_clean <- write_csv(data_raw, 
+          here::here("participation", "data", "gap_asia_2007.csv")
+)
+```
+

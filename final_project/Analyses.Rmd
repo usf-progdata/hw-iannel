@@ -10,6 +10,6 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#include libraries here
+#include libraries here; don't print out datasets in final reports
 ```
 
