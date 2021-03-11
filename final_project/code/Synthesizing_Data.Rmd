@@ -1,0 +1,34 @@
+---
+title: "Creating_Synthetic_Data"
+author: "Ian Nel"
+date: "3/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(synthpop)
+library(tidyverse)
+```
+
+```{r data input}
+dat_original <- read.csv("All Samples Combined & Stacked_R.csv") %>% 
+  select("Sample":"ExtDT") %>% 
+  na_if(-99)
+```
+
+```{r creating synthetic dataset}
+my.seed <- 17914709
+data_synthetic <- syn(dat_original, seed = my.seed)
+
+```
+
+```{r saving synthetic data}
+write.syn(data_synthetic, filename = "DT-Res_synthetic", filetype = "csv")
+
+```
+
+```{r}
+
+
+```
