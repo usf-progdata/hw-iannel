@@ -1,12 +1,20 @@
 ---
 title: "Beautifying RMarkdown"
-author: "Your Name Here"
-date: "1990-05-31"
-output: html_document
+author: "Ian Nel"
+date: "`r format(Sys.Date(), '%b %d %Y')`"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: zenburn
+    code_folding: hide
+    toc: true 
+    toc_float: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+library(tidyverse)
 ```
 
 ## The Surprising Truth about `mpg`
@@ -15,9 +23,40 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 
 Add a code chunk that uses the `ggplot2::mpg` dataset to plot `displ` against `hwy` (highway mpg), with points colored by `manufacturer` and shaped by `year`.
 
+```{r}
+plot <- ggplot2::mpg %>% 
+  ggplot() +
+  aes(x = displ,
+      y = hwy,
+      color = manufacturer,
+      fill = manufacturer,
+      shape =as.factor(year)) +
+  geom_point()
+
+plot
+
+```
+
+
 ### `mpg`: The Table
 
 Add a second code chunk that gives a summary table with the **mean** and **sd** for `displ` and `hwy` for each year.
+
+```{r}
+table <- ggplot2::mpg %>% 
+  group_by(year) %>% 
+  summarize(across(c(displ, hwy),
+                   list(
+                     mean = ~mean(.x, na.rm = TRUE),
+                     sd = ~sd(.x, na.rm = TRUE))
+                  )
+            )
+table
+```
+
+CTRL + ALT + I = create code chunk
+little lines on top right have a table of contents
+ctrl shift c = comment it out 
 
 Around each piece of output, add a brief description.
 
@@ -213,9 +252,9 @@ To render such output, set the `results` option to `'asis'`.
 Try it out! 
 Add `results='asis'` to this chunk and see how the output changes.
 
-```{r try out 'asis' output}
+```{r output, results= 'asis'}
 cat("$$
-\operatorname{mpg} = \alpha + \beta_{1}(\operatorname{cyl}) + \beta_{2}(\operatorname{disp}) + \epsilon
+\\operatorname{mpg} = \\alpha + \\beta_{1}(\\operatorname{cyl}) + \\beta_{2}(\\operatorname{disp}) + \\epsilon
 $$")
 ```
 
