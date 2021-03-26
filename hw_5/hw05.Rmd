@@ -72,9 +72,9 @@ Scented %>%
   mutate(Rating = mean(Rating)) %>% 
   ggplot() +
     aes(x = as.Date(Date), 
-        y = Rating
+        y = Rating,
         ) +
-  geom_point(alpha = .5, shape = 1, color = "purple") +
+  geom_point(alpha = .5, color = "purple") +
   scale_x_date(name = "Date", date_breaks = "6 months", date_labels = "%m-%Y") +
   geom_smooth(method = "loess") +
   geom_vline(xintercept = as.numeric(as.Date("2020-01-20")), linetype = "dashed")
