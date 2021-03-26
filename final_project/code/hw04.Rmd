@@ -10,7 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse) 
+library(tidyverse)
 ```
 
 ## Step 3: Practice input, process, output 
@@ -35,29 +35,37 @@ data_raw <- read_csv(
     Sample = col_factor(),
     .default = col_double()
   )
-) 
+)
 ```
 
 ```{r cleaning data}
-dat_clean <- data_raw %>% 
+dat_clean <- data_raw %>%
   mutate(
     Sample = recode(Sample, "4" = "Clinical", "3" = "College", .default = "Community")
-  ) %>% 
+  ) %>%
   as_tibble()
 ```
 
 ```{r summary table}
-dat_clean %>% 
+
+# WDG: Check to make sure this is written correctly 
+
+dat_clean %>%
   group_by(Sample) %>%
-  summarize(across(c(DTN:DTP),
-                   list(
-                     mu = ~mean(.x, na.rm = TRUE),
-                     sd = ~sd(.x, na.rm = TRUE)),
-        ))
+  summarize(across(
+    c(DTN:DTP),
+    list(
+      mu = ~ mean(.x, na.rm = TRUE),
+      sd = ~ sd(.x, na.rm = TRUE)
+    ),
+  ))
 ```
 
 ```{r plots}
-hw_plot <- dat_clean %>% 
+
+# WDG: A title is very important when it comes to graphs. Try and answer the question: "What am I looking at?" when thinking of a title.
+
+hw_plot <- dat_clean %>%
   ggplot(aes(DTN, Sample)) +
   ggridges::geom_density_ridges() +
   scale_fill_brewer(palette = 4)
@@ -66,12 +74,12 @@ hw_plot
 ```
 
 ```{r file output}
-write_csv(dat_clean, 
-          here::here("data", "data_clean", "DT-Res_synthetic_clean_2021-03-11")
-          )
+write_csv(
+  dat_clean,
+  here::here("data", "data_clean", "DT-Res_synthetic_clean_2021-03-11")
+)
 
 ggsave(here::here("output", "figures", "hw_plot.pdf"))
 ggsave(here::here("output", "figures", "hw_plot.tiff"))
 ggsave(here::here("output", "figures", "hw_plot.png"))
 ```
-
