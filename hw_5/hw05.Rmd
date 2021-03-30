@@ -72,7 +72,7 @@ Scented %>%
   mutate(Rating = mean(Rating)) %>% 
   ggplot() +
     aes(x = as.Date(Date), 
-        y = Rating,
+        y = Rating
         ) +
   geom_point(alpha = .5, color = "purple") +
   scale_x_date(name = "Date", date_breaks = "6 months", date_labels = "%m-%Y") +
