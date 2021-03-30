@@ -74,7 +74,7 @@ Scented %>%
     aes(x = as.Date(Date), 
         y = Rating
         ) +
-  geom_point(alpha = .5, color = "purple") +
+  geom_point(alpha = .5, color = "purple") + #addressing overplotting
   scale_x_date(name = "Date", date_breaks = "6 months", date_labels = "%m-%Y") +
   geom_smooth(method = "loess") +
   geom_vline(xintercept = as.numeric(as.Date("2020-01-20")), linetype = "dashed")
