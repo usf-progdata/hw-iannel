@@ -3,12 +3,12 @@ title: "Consequences of Covid-19 for Candle Critiques"
 author: "Your Name Here"
 date: "3/22/2021"
 output: 
+  
+  github_document: default
   html_document:
     code_folding: hide
     highlight: haddock
     theme: lumen
-  github_document: default
-  
 ---
 
 For this assignment, you will produce a report exploring the impact of Covid-19 on scented candle ratings.
@@ -118,10 +118,11 @@ Candles_all <- bind_rows(
 ```
 
 ```{r}
-Plot_Combined <- Candles_all %>% 
+Plot <- 
+Candles_all %>% 
   filter(Date > "2017-01-01") %>% 
   group_by(Date, Scented) %>% 
-  mutate(Rating_Mean = mean(Rating)) %>% 
+  summarize(Rating_Mean = mean(Rating)) %>% 
   ggplot(
     aes(x = as.Date(Date),
         y = Rating_Mean,
@@ -135,11 +136,9 @@ Plot_Combined <- Candles_all %>%
   geom_vline(xintercept = as.numeric(as.Date("2020-01-20")), linetype = "dashed") +
   scale_y_continuous(name = "Average Rating") +
   ggtitle("Average Candle Reviews For Scented and Unscented Candles") + 
-  guides(x = guide_axis(n.dodge = 2)) + 
-  scale_color_viridis_d() +
-  theme_light()
+  guides(x = guide_axis(n.dodge = 2)) 
 
-Plot_Combined
+Plot
 ```
 
 Which of these two sets of plots do you find easier to interpret?
