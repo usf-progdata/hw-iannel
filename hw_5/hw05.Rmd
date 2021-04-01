@@ -3,12 +3,11 @@ title: "Consequences of Covid-19 for Candle Critiques"
 author: "Your Name Here"
 date: "3/22/2021"
 output: 
-  
-  github_document: default
   html_document:
     code_folding: hide
     highlight: haddock
     theme: lumen
+  github_document: default
 ---
 
 For this assignment, you will produce a report exploring the impact of Covid-19 on scented candle ratings.
@@ -109,8 +108,8 @@ These graphs demonstrate that ratings for scented candles steeply declined after
 Combine the two datasets into one and make a plot similar to above, but showing both unscented and scented candles.
 Distinguish scented versus unscented candles using color, shape, and line type (for the trend lines).
 
-```{r combine datasets, eval=FALSE}
-Candles_all <- bind_rows(
+```{r combine datasets}
+Candles <- bind_rows(
 	scented = Scented, 
 	unscented = Unscented, 
 	.id = "Scented"
@@ -119,7 +118,7 @@ Candles_all <- bind_rows(
 
 ```{r}
 Plot <- 
-Candles_all %>% 
+Candles %>% 
   filter(Date > "2017-01-01") %>% 
   group_by(Date, Scented) %>% 
   summarize(Rating_Mean = mean(Rating)) %>% 
