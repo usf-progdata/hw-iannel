@@ -151,13 +151,13 @@ A function as three parts:
 First, pick a name for your function. 
 Like all of your object names, make your function names clear and unambiguous. 
 `my_awesome_function()` doesn't tell us anything about what the function does. 
-Usually, I prefer to make my function names *verbs* to make it clear that they *do* something.
+Usually, I prefer to make my function names *verbs* to make it clear that they *do* something (e.g., make_descriptives_table).
 
 Then, tell R that you are making a function by assigning `function() {}` to your
 function name:
 
 ```{r, eval = FALSE}
-function_name <- function() {}
+function_name <- function() {} #e.g., function(.data, variables, ) {}
 ```
 
 Your arguments go *inside the parentheses* after `function`. 
