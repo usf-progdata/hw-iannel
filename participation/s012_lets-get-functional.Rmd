@@ -267,3 +267,9 @@ Prepare an individualized report for each person presenting the following inform
   4. Bonus: In addition, provide individualized _narrative_ descriptions of what each of their scores means (e.g., based on whether they are "high", "medium", or "low" on each trait). See the two examples linked above for ideas
      
 To save yourself a bunch of tedious report writing, write a function to do this!
+
+```{r}
+
+
+```
+
