@@ -1,0 +1,47 @@
+---
+title: "Final Project"
+author: "Ian Nel"
+date: "5/6/2021"
+output: 
+  html_document:
+    theme: paper
+  github_document: default 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(MVN)
+```
+
+```{r data input}
+data_raw <- read_csv(
+  here::here("data", "DT-Res_synthetic_2021-03-11.csv"),
+  col_types = cols(
+    Sample = col_factor(),
+    Sex = col_factor(),
+    Ethnicity = col_factor(),
+    .default = col_double()
+  )
+) %>% as.data.frame() 
+str(data_raw)
+```
+
+```{r summary table}
+
+dat_clean %>%
+  
+```
+
+```{r}
+  
+  group_by(Sample) %>%
+  summarize(across(
+    c(DTN:DTP),
+    list(
+      mu = ~ mean(.x, na.rm = TRUE),
+      sd = ~ sd(.x, na.rm = TRUE)
+    ),
+  ))
+```
+

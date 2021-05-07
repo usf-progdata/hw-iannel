@@ -8,11 +8,11 @@ The following sections will describe the structure and content of the folders he
 
 ### Data 
 
-The data folder contains two subfolders: one for the raw data and one for the cleaned data. These datasets contain synthesized demographic information, as well as multiple, synthesized measures of distress tolerance and resilience. 
+The "data"" folder contains two datasets and an associated data dictionary. These datasets contain (synthetic) demographic information, as well as multiple measures of distress tolerance, resilience, and psychopathology. The first ("DT-Res_synthetic_2021-03-11.csv") is an archival dataset from the DEXTER (Dynamics of EXTERnalizing) Lab at USF that has been synthesized to protect confidentiality (see "Synthesizing_Data.Rmd" for germinal code). The second dataset ("DT-Res_synthetic_clean") has been cleaned using the code contained in the "Final Project Code.Rmd". 
 
 ### Code 
 
-The code folder contains two important files. The "Synthesizing_Data.Rmd" file contains the code that was used to synthesize the data in this project. Data were synthesized using the "synthpop" package in R in order to protect confidential data. The "hw04.FILE_TYPE" contains code for inputting, cleaning, and outputting data and associated plots.  
+The code folder contains two important files. The "Synthesizing_Data.Rmd" file contains the code that was used to synthesize the data for this study. Data were synthesized using the "synthpop" package in R in order to protect confidential data. The "Final Project Code.Rmd" contains code for inputting, wrangling, analyzing, visualizing, and outputting data.
 
 ### Output 
 
