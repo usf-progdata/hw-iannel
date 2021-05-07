@@ -12,6 +12,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(MVN)
+library(lavaan)
+library(tidySEM)
+library(semTable)
+library(semPlot)
 ```
 
 ```{r data input}
@@ -57,56 +61,48 @@ data_clean <- data_raw %>%
 str(data_clean)
   
 ```
-```{r} 
+```{r summary table} 
 Table_1 <- data_clean %>%
-  rowwise() %>% 
-  mutate(
-    DTQ_tot = mean(c_across(DTNEW_2R:DTNew_82), na.rm = TRUE),
-    DTS_tot = mean(c_across(DTS_1:DTS_16), na.rm = TRUE),
-    FDSR_tot = mean(c_across(FDSR_1:FDSR_35), na.rm = TRUE),
-    TDASS_tot = mean(c_across(TDASS_1:TDASS_25), na.rm = TRUE),
-    DRS_tot = mean(c_across(DRS_1:DRS_15), na.rm = TRUE),
-    GRIT_tot = mean(c_across(GRIT_1:GRIT_12), na.rm = TRUE),
-    RS_tot = mean(c_across(DRS_1:DRS_15), na.rm = TRUE),
-    .before = everything()
-  ) %>% 
   group_by(Sample) %>% 
   summarize(
-    across(c(DTQ_tot:RS_tot,Tanx:Bpd)), 
+    across(c(DTQ_tot:RS_tot,Tanx:Bpd), 
     list(
         Mean = ~ mean(.x, na.rm = TRUE),
-        SD = ~ sd(.x, na.rm = TRUE),
-        Median = ~ median(.x, na.rm = TRUE),
-        Min = ~ min(.x, na.rm = TRUE),
-        Max = ~ max(.x, na.rm = TRUE))
-    ) 
+        SD = ~ sd(.x, na.rm = TRUE)),
+    .groups = keep
+    )
+  )
 ```
 
 
-```{r}
+```{r testing multivariate normality assumption}
 vars <- data_clean %>% 
-  select(!)
-datr <- mvn(dat, subset = NULL, mvnTest = c("mardia", "hz", "royston", "dh",
-  "energy"), covariance = TRUE, tol = 1e-25, alpha = 0.5,
+  select(DTNEW_2R:RS_26) %>% 
+  as.data.frame()
+
+mvn_result <- mvn(vars, subset = NULL, mvnTest = "mardia", covariance = TRUE, tol = 1e-25, alpha = 0.5,
   scale = FALSE, desc = TRUE, transform = "none", R = 1000,
-  univariateTest = c("SW", "CVM", "Lillie", "SF", "AD"),
-  univariatePlot = "none", multivariatePlot = "none",
-  multivariateOutlierMethod = "none", bc = FALSE, bcType = "rounded",
+  univariateTest = "SW",univariatePlot = "qq", multivariatePlot = FALSE,
+  multivariateOutlierMethod = "quan", bc = FALSE, bcType = NULL,
   showOutliers = FALSE, showNewData = FALSE)
 
+mvn_result$multivariateNormality
+
 ```
 
+
+```{r factor analysis}
+
+```
+
+```{r }
+
+```
 
 ```{r}
-Table_1 <- data_clean %>% 
-  rowwise() %>% 
-  group_by(Sample) %>%
-  summarize(across(
-    c(DTN:DTP),
-    list(
-      mu = ~ mean(.x, na.rm = TRUE),
-      sd = ~ sd(.x, na.rm = TRUE)
-    ),
-  ))
+
 ```
 
+```{r}
+
+```
