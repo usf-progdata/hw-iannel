@@ -16,25 +16,90 @@ library(MVN)
 
 ```{r data input}
 data_raw <- read_csv(
-  here::here("data", "DT-Res_synthetic_2021-03-11.csv"),
+  here::here("data", "DT-Res_synthetic.csv"),
   col_types = cols(
     Sample = col_factor(),
     Sex = col_factor(),
     Ethnicity = col_factor(),
     .default = col_double()
   )
-) %>% as.data.frame() 
+)
 str(data_raw)
 ```
 
-```{r summary table}
+```{r data wrangling}
 
-dat_clean %>%
+data_clean <- data_raw %>%
+  select(c(
+    Sample, 
+    DTNEW_2R:DTNew_82, 
+    DTS_1:DTS_16, 
+    FDSR_1:FDSR_35, 
+    TDASS_1:TDASS_25, 
+    DRS_1:DRS_15,
+    GRIT_1:GRIT_12,
+    RS_1:RS_26,
+    Tanx:Bpd)) %>% 
+  mutate(
+    Sample = recode(Sample, "4" = "Clinical", "3" = "College", .default = "Community")
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    DTQ_tot = mean(c_across(DTNEW_2R:DTNew_82)),
+    DTS_tot = mean(c_across(DTS_1:DTS_16)),
+    FDSR_tot = mean(c_across(FDSR_1:FDSR_35)),
+    TDASS_tot = mean(c_across(TDASS_1:TDASS_25)),
+    DRS_tot = mean(c_across(DRS_1:DRS_15)),
+    GRIT_tot = mean(c_across(GRIT_1:GRIT_12)),
+    RS_tot = mean(c_across(DRS_1:DRS_15)),
+    .before = everything(),
+  ) 
+str(data_clean)
   
 ```
+```{r} 
+Table_1 <- data_clean %>%
+  rowwise() %>% 
+  mutate(
+    DTQ_tot = mean(c_across(DTNEW_2R:DTNew_82), na.rm = TRUE),
+    DTS_tot = mean(c_across(DTS_1:DTS_16), na.rm = TRUE),
+    FDSR_tot = mean(c_across(FDSR_1:FDSR_35), na.rm = TRUE),
+    TDASS_tot = mean(c_across(TDASS_1:TDASS_25), na.rm = TRUE),
+    DRS_tot = mean(c_across(DRS_1:DRS_15), na.rm = TRUE),
+    GRIT_tot = mean(c_across(GRIT_1:GRIT_12), na.rm = TRUE),
+    RS_tot = mean(c_across(DRS_1:DRS_15), na.rm = TRUE),
+    .before = everything()
+  ) %>% 
+  group_by(Sample) %>% 
+  summarize(
+    across(c(DTQ_tot:RS_tot,Tanx:Bpd)), 
+    list(
+        Mean = ~ mean(.x, na.rm = TRUE),
+        SD = ~ sd(.x, na.rm = TRUE),
+        Median = ~ median(.x, na.rm = TRUE),
+        Min = ~ min(.x, na.rm = TRUE),
+        Max = ~ max(.x, na.rm = TRUE))
+    ) 
+```
+
 
 ```{r}
-  
+vars <- data_clean %>% 
+  select(!)
+datr <- mvn(dat, subset = NULL, mvnTest = c("mardia", "hz", "royston", "dh",
+  "energy"), covariance = TRUE, tol = 1e-25, alpha = 0.5,
+  scale = FALSE, desc = TRUE, transform = "none", R = 1000,
+  univariateTest = c("SW", "CVM", "Lillie", "SF", "AD"),
+  univariatePlot = "none", multivariatePlot = "none",
+  multivariateOutlierMethod = "none", bc = FALSE, bcType = "rounded",
+  showOutliers = FALSE, showNewData = FALSE)
+
+```
+
+
+```{r}
+Table_1 <- data_clean %>% 
+  rowwise() %>% 
   group_by(Sample) %>%
   summarize(across(
     c(DTN:DTP),

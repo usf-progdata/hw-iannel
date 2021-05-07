@@ -27,8 +27,3 @@ data_synthetic <- syn(dat_original, seed = my.seed)
 write.syn(data_synthetic, filename = "DT-Res_synthetic", filetype = "csv")
 
 ```
-
-```{r}
-
-
-```
