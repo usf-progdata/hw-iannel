@@ -1,0 +1,25 @@
+---
+title: "Write-Up"
+author: "Ian Nel"
+date: "5/6/2021"
+output: 
+  html_document:
+    theme: paper
+  github_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Aims
+
+The present investigation sought to examine the construct and discriminant validity of distress tolerance and resilience measures in a structural equation modeling framework. 
+
+# Dataset
+
+The present analyses were conducted using a dataset that was synthesized using the ```synthpop``` package in R (see "code" folder for more information). This is an archival dataset from the DEXTER Lab at USF, which includes indicators of psychopathology as well as multiple measures of distress tolerance and resilience. 
+
+# Data Wrangling, Results, Conclusion
+
+The "Final Project Code.Rmd" file contains the code used to input, wrangle, and output the data and associated figures and tables. This includes a summary table of distress tolerance, resilience, and psychopathology measures by sample type (i.e., Clinical, College, Community). Although the Clinical Sample had ample missing data, interestingly, the community scored higher across almost all measures included in this study. The test for multivariate normality indicated that this assumption was not met; however, ML is robust against violations of normality. A correlated factors CFA was conducted on the distress tolerance and resilience measures with each manifest indicator loading on its respective measure and two higher-order latent factors: distress tolerance and resilience. Goodness-of-fit was mixed, with CFI and TLI indicating poor fit (CFI = .77, TLI = .76) and the RMSEA and SRMR indicating good fit (< 0.08). 

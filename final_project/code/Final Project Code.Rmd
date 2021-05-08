@@ -138,13 +138,14 @@ CF_Model_Fit_Summary
 ```{r CF Model Diagram}
 
 CF_Model_Graph <- semPaths(CF_Model_Fit, whatLabels = "std", intercepts = FALSE, layout = "tree2", edge.color = "black")
-title("Correlated Factors Model of Distress Tolerance and Resilience")
+title("Correlated Factors Model of Distress Tolerance and Resilience") 
+
 
 ```
 
 ```{r exporting table}
 CF_Model_Table <- semTable(
-CF_Model_Fit, file = "Correlated Factors Model of Distress Tolerance and Resilience", paramSets = c("loadings", "fits"), paramSetLabels = c("loadings"= "Factor Loadings", "fits" = "Fit Indices"), columns = c(est = "Estimate", se = "SE", p = "p", "eststars" = "Significance"), fits = c("npar", "fmin", "chisq", "df", "pvalue", "baseline.chisq", "baseline.df", "baseline.pvalue", "cfi", "tli", "aic", "bic", "ntotal", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "rmsea.pvalue", "srmr"), fitLabels = NULL, type = "latex", print.results = FALSE, alpha = c(0.05, 0.01, 0.001)
+CF_Model_Fit, file = "Correlated Factors Model of Distress Tolerance and Resilience", paramSets = c("loadings", "fits"), paramSetLabels = c("loadings"= "Factor Loadings", "fits" = "Fit Indices"), columns = c(est = "Estimate", se = "SE", p = "p", "eststars" = "Significance"), fits = c("npar", "fmin", "chisq", "df", "pvalue", "baseline.chisq", "baseline.df", "baseline.pvalue", "cfi", "tli", "aic", "bic", "ntotal", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "rmsea.pvalue", "srmr"), fitLabels = NULL, type = "csv", print.results = FALSE, alpha = c(0.05, 0.01, 0.001)
 )
 ```
 
@@ -152,24 +153,19 @@ CF_Model_Fit, file = "Correlated Factors Model of Distress Tolerance and Resilie
 ```{r file output}
 write_csv(
   data_clean,
-  here::here("data", "DT-Res_synthetic_clean")
+  here::here("data", "DT-Res_synthetic_clean.csv")
 )
 
 write_csv(
   Table_1,
-  here::here("output", "Distress-Tolerance_Reslience_Table")
+  here::here("output", "Distress-Tolerance_Reslience_Table.csv")
 )
 
 ggsave(here::here("output", "DTQ_plot.png"), DTQ_plot)
 
 write_csv(
   MVN_Test_Result,
-  here::here("output", "Multivariate_Normality_Test)
+  here::here("output", "Multivariate_Normality_Test.csv")
   )
-  
-CF_Model_Graph
-CF_Model_Table
-
-ggplot(here::here,
 ```
 ```
