@@ -74,6 +74,19 @@ Table_1 <- data_clean %>%
   )
 ```
 
+##unfinished 
+```{r plots}
+
+# WDG: A title is very important when it comes to graphs. Try and answer the question: "What am I looking at?" when thinking of a title.
+
+DTQ_plot <- data_clean %>%
+  ggplot(aes(DTQ_tot, Sample)) +
+  ggridges::geom_density_ridges() +
+  scale_fill_brewer(palette = 4)
+
+DTQ_plot
+```
+
 
 ```{r testing multivariate normality assumption}
 vars <- data_clean %>% 
@@ -91,18 +104,61 @@ mvn_result$multivariateNormality
 ```
 
 
-```{r factor analysis}
+```{r correlated factors model fit}
+CF_Model <- '
 
+DTNEG =~ DTNEW_2R + DTNEW_5R + DTNEW_10R + DTNEW_18R + DTNEW_29R + DTNEW_47R 
+
+DTPOS =~ DTNew_53 + DTNew_58 + DTNew_61 + DTNew_63 + DTNew_64
+
+DTS =~ DTS_1 + DTS_2 + DTS_3 + DTS_4 + DTS_5 + DTS_7r + DTS_8 + DTS_9 + DTS_10 + DTS_11 + DTS_12 + DTS_13 +         DTS_14 + DTS_16
+
+FDSR =~ FDSR_15 + FDSR_16 + FDSR_17 + FDSR_18 + FDSR_19 + FDSR_20 + FDSR_21 + FDSR_22 + FDSR_23 + FDSR_24 +          FDSR_25 + FDSR_26 + FDSR_27 + FDSR_28 + FDSR_29 + FDSR_30 + FDSR_31 + FDSR_32 + FDSR_33 + FDSR_34 +          FDSR_35
+
+TDASS =~ TDASS_1 + TDASS_2 + TDASS_3 + TDASS_4 + TDASS_5 + TDASS_6 + TDASS_7 + TDASS_8 + TDASS_9 + TDASS_10 +         TDASS_11 + TDASS_12 + TDASS_13 + TDASS_14 + TDASS_15 + TDASS_16 + TDASS_17 + TDASS_18 + TDASS_19 +           TDASS_20 + TDASS_21 + TDASS_22 + TDASS_23 + TDASS_24 + TDASS_25
+
+DRS =~  DRS_1 + DRS_2 + DRS_3r + DRS_4r + DRS_5 + DRS_6 + DRS_7 + DRS_8r + DRS_9 + DRS_10 + DRS_11r + DRS_12         + DRS_13r + DRS_14r + DRS_15
+
+GRIT =~ GRIT_1 + GRIT_4 + GRIT_6 + GRIT_9 + GRIT_10 + GRIT_12
+
+RS =~ RS_1 + RS_2 + RS_3 + RS_4 + RS_5 + RS_6 + RS_7 + RS_8 + RS_9 + RS_10 + RS_11 + RS_12 + RS_13 + RS_14 +       RS_15 + RS_16 + RS_17 + RS_18 + RS_19 + RS_20 + RS_21 + RS_22 + RS_23 + RS_24 + RS_25 + RS_26
+
+Distress Tolerance =~ DTNEG + DTPOS + DTS + FDSR + TDASS 
+Resilience =~ DRS + GRIT + RS'
+
+data_clean_NonClinical <- data_clean %>% 
+                          select(Sample == !Clinical)
+
+CF_Model_Fit <- cfa(CF_Model, data = data_clean, estimator = "ML", missing = "fiml", std.lv= TRUE)
+
+CF_Model_Fit_Summary <- summary(CF_Model_Fit, standardized=TRUE, fit.measures=TRUE)
+CF_Model_Fit_Summary 
 ```
 
-```{r }
+```{r CF Model Diagram}
+CF_Model_Graph <- semPaths(CF_Model_Fit, whatLabels = "std", intercepts = FALSE, layout = "circle", edge.color = "black")
+title("Correlated Factors Model of Distress Tolerance and Resilience")
+```
 
+```{r exporting table}
+CF_Model_Table <- semTable(
+CF_Model_Fit, file = "Correlated Factors Model of Distress Tolerance and Resilience", paramSets = c("loadings", "fits"), paramSetLabels = c("loadings"= "Factor Loadings", "fits" = "Fit Indices"), columns = c(est = "Estimate", se = "SE", p = "p", "eststars" = "Significance"), fits = c("npar", "fmin", "chisq", "df", "pvalue", "baseline.chisq", "baseline.df", "baseline.pvalue", "cfi", "tli", "aic", "bic", "ntotal", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "rmsea.pvalue", "srmr"), fitLabels = NULL, type = "html", print.results = FALSE, alpha = c(0.05, 0.01, 0.001)
+)
 ```
 
 ```{r}
 
 ```
 
-```{r}
 
+```{r file output}
+write_csv(
+  data_clean,
+  here::here("data", "data_clean", "DT-Res_synthetic_clean")
+)
+
+
+ggsave(here::here("output", "figures", "hw_plot.png"))
+
+```
 ```
